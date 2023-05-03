@@ -15,7 +15,8 @@
 #include "utils.h"
 
 // Voltages should be specified in V
-#define BATTERY_FULL       12.560 //TODO: Change according to actual battery used!
+// #define BATTERY_FULL       12.560 //TODO: Change according to actual battery used!
+#define BATTERY_FULL       12.000
 #define BATTERY_EMPTY      10.400 //TODO: Change according to actual battery used!
 
 // Running average sample size
@@ -42,7 +43,7 @@
 #define ADC_SATURATION_V 3.195    // Not used in calculations, but good to have for future reference
 #define ADC_LINEAR_MAX_V 2.75     // Voltage on gpio when readings starts to become exponential
 #define ADC_LINEAR_MAX_READING 1650 // ADC reading at ADC_LINEAR_MAX_V
-#define ADC_DETECTION_V 0.21      // Online sources claim 0.15V, but by raising this value the slope of the linear approximation is increased, and the accuracy for both low and high input voltages is improved. 
+#define ADC_DETECTION_V 0.21      // Online sources claim 0.15V, but by raising this value the slope of the linear approximation is increased, and the accuracy for both low and high input voltages is improved.
 
 class BATTERY {
   public:
