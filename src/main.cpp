@@ -47,7 +47,7 @@
 #include "settings.h"
 
 
-//#define INTERRUPT_ATTR DRAM_ATTR 
+//#define INTERRUPT_ATTR DRAM_ATTR
 #define BUFFER_LENGTH 32
 #define __arm__
 #define __PGMSPACE_H_
@@ -98,7 +98,7 @@ WEBUI webUi(&webServer, &webSocket, *setManualMode, *setRebootNeeded, &settings)
 std::vector<PRESENTER*> presenters = {
   &serialUi,
   &display,
-  &webUi,  
+  &webUi,
 };
 
 
@@ -131,7 +131,7 @@ OpModeIdle opModeIdle(&controller, &logger);
 OpModeError opModeError(&controller, &logger);
 OpModeUpgrade opModeUpgrade(&controller, &logger);
 
-OPERATIONALMODE* availableOpModes[] = { 
+OPERATIONALMODE* availableOpModes[] = {
   &opModeIdle,
   &opModeError,
   &opModeMow,
@@ -198,19 +198,22 @@ void pollPollables(void * parameter) {
         presenters[i]->PresentMowerModel(&mowerModel, useFullResend);
       }
     }
-    bootButton.check();
+    // bootButton.check();
     sw3Button.check();
 
-    
+
     if (bootButton.GetConsumablePress()) {
-        int baseMode = manualMode >= 0 ? manualMode : currentMode->id();  
+        if (VERBOSE_LOGGING) {
+            logger.log("Boot button pressed");
+        }
+        int baseMode = manualMode >= 0 ? manualMode : currentMode->id();
         int newMode = baseMode + 1;
         if (newMode > MAX_MANUAL_OPMODE) {
           newMode = 0;
         }
         setManualMode(newMode);
         logger.log("New mode: " + String(newMode));
-    
+
     }
 
     bumper.doLoop();
@@ -242,7 +245,7 @@ void pollPollables(void * parameter) {
 
     mowerModel.LeftSensorIsOutOfBounds = leftSensor.IsOutOfBounds();
     mowerModel.RightSensorIsOutOfBounds = rightSensor.IsOutOfBounds();
-    
+
     yield();
   }
 
@@ -250,7 +253,7 @@ void pollPollables(void * parameter) {
   while (true) //Just chill and don't return while waiting for update
   {
     if (hasTimeout(lastPrint, 200)) {
-      
+
       lastPrint = millis();
       for (size_t i = 0; i < presenters.size(); i++)
       {
@@ -298,7 +301,7 @@ void setup() {
   settings.setup(&logger);
 
   analogReadResolution(ANALOG_RESOLUTION);
-  analogSetAttenuation(ADC_11db);  
+  analogSetAttenuation(ADC_11db);
 
 
   webUi.SetLogger(&logger);
@@ -353,7 +356,7 @@ void setup() {
 
   delay(1000);
 
-  expectedMode = EEPROM.readInt(EEPROM_ADR_INIT_MODE);;
+  expectedMode = EEPROM.readInt(EEPROM_ADR_INIT_MODE);
   expectedBehavior = currentMode->start();
   currentBehavior = availableBehaviors[0]; //Just something
   mowerModel.OpMode = currentMode->desc();
@@ -376,8 +379,8 @@ void loop() {
   if (rebootIsNeeded && hasTimeout(rebootIsNeededSince, 2000)) {
     ESP.restart();
   }
-  
-  digitalWrite(LED_PIN, 
+
+  digitalWrite(LED_PIN,
     bootButton.IsPressed()
     || sw3Button.IsPressed()
     || bumper.IsBumped());
@@ -427,7 +430,7 @@ void loop() {
     }
   }
 
-  
+
   if (expectedBehavior != currentBehavior->id()) {
     int c = sizeof(availableBehaviors) / sizeof(availableBehaviors[0]);
     bool foundIt = false;
