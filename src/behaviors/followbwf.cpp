@@ -37,7 +37,7 @@ int FollowBWF::loop() {
         return BEHAVIOR_CHARGE;
     }
 
-    
+
     if (hasTimeout(lastOutside, 15000)) {
         return BEHAVIOR_LOOK_FOR_BWF;
     }
@@ -80,9 +80,9 @@ int FollowBWF::loop() {
                 logger->log("Giving up");
                 break;
             }
-            controller->RunAsync(-FULL_SPEED, -FULL_SPEED, NORMAL_ACCELERATION_TIME);
+            controller->RunAsync(FULL_SPEED, -FULL_SPEED, NORMAL_ACCELERATION_TIME);
         }
-        controller->TurnAngle(DOCKING_TURN_ANGLE_AFTER_BACK_UP);
+        // controller->TurnAngle(DOCKING_TURN_ANGLE_AFTER_BACK_UP);
         return id();
     }
 
@@ -91,7 +91,7 @@ int FollowBWF::loop() {
         leftMotor->setSpeed(DOCKING_WHEEL_HIGH_SPEED, DOCKING_TIME_TO_HIGH_SPEED);
         if (rightMotor->getSpeed() < DOCKING_WHEEL_LOW_SPEED)
             rightMotor->setSpeed(DOCKING_WHEEL_HIGH_SPEED, DOCKING_TIME_TO_HIGH_SPEED);
-        else 
+        else
             rightMotor->setSpeed(DOCKING_WHEEL_LOW_SPEED, DOCKING_TIME_TO_SLOW_SPEED);
     } else {
         lastInside = millis();
@@ -99,10 +99,10 @@ int FollowBWF::loop() {
         rightMotor->setSpeed(DOCKING_WHEEL_HIGH_SPEED, DOCKING_TIME_TO_HIGH_SPEED);
         if (leftMotor->getSpeed() < DOCKING_WHEEL_LOW_SPEED)
             leftMotor->setSpeed(DOCKING_WHEEL_HIGH_SPEED, DOCKING_TIME_TO_HIGH_SPEED);
-        else 
+        else
             leftMotor->setSpeed(DOCKING_WHEEL_LOW_SPEED, DOCKING_TIME_TO_SLOW_SPEED);
 
-    } 
+    }
 
     return id();
 }
