@@ -8,6 +8,7 @@
 
 #define SIGNAL_VALIDITY_TIME_MS 120000
 #define PULSE_UNIT_LENGTH 100
+#define BWF_FILTER_TIME_MS 300
 
 
 int SENSOR::outside_code[] = {OUTSIDE_BWF};
@@ -75,7 +76,7 @@ void SENSOR::handleInterrupt() {
   } else {
     pulse_count_outside=0;
   }
-  
+
 
 
   // Store the received code for debug output
@@ -83,8 +84,26 @@ void SENSOR::handleInterrupt() {
   // if (arr_count>arr_length) arr_count=0;
 }
 
+// bool SENSOR::IsIn() {
+//     return isIn && !IsSignalMissing();
+// }
+
 bool SENSOR::IsIn() {
-    return isIn && !IsSignalMissing();
+    static unsigned long startTime = 0; // Static variable to store the start time
+    unsigned long currentTime = millis(); // Get the current time in milliseconds
+
+    if (isIn && !IsSignalMissing()) { // Check if the conditions are met
+        if (startTime == 0) { // If this is the first time the conditions are met, set the start time
+            startTime = currentTime;
+        }
+        if (currentTime - startTime >= BWF_FILTER_TIME_MS) { // If the filter time has passed, return true
+            return true;
+        }
+    } else { // If the conditions are not met, reset the start time
+        startTime = 0;
+    }
+
+    return false; // If the filter time has not passed, return false
 }
 
 bool SENSOR::IsOut() {
@@ -101,7 +120,7 @@ bool SENSOR::IsOutOfBounds() {
         //logger->log("a");
         logger->log(name +  (result ? " Out" : " In ") + s);
         //logger->log("b");
-      }      
+      }
     }
     return result;
 }
@@ -119,18 +138,18 @@ String SENSOR::GetPulseHistoryS() {
   String result = "";
   try
   {
-    
+
   for (size_t i = 0; i < PULSE_HISTORY_COUNT; i++)
     {
       result = result + " " + String(pulsehistory[i]);
     }
     result = result + " Last ok: " + String(lastSignalTime);
-     
+
   }
   catch(const std::exception& e)
-  { 
+  {
     result = e.what();
   }
-  
+
    return result;
 }
