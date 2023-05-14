@@ -55,7 +55,7 @@ typedef std::function<void()> RebootNeededEvent;
 #define AUX_MOTOR_SENSE_PIN 39
 
 // #define LOAD_LIMIT_WHEEL 175
-#define LOAD_LIMIT_WHEEL 350
+#define LOAD_LIMIT_WHEEL 400
 // Load Limit unit conversion:
 // 0.1ohm shunt, 16 Gain Op-Amp, 11 bit (nonlinear) adc setting =>  1 mA ~= 1 load limit value
 #define LOAD_LIMIT_CUTTER 900
@@ -98,6 +98,7 @@ typedef std::function<void()> RebootNeededEvent;
 #define ERROR_CUTTER_STUCK 8
 
 #define LOG_BUFFER_SIZE 100
+#define VERBOSE_LOGGING true
 
 #define EEPROM_ADR_WIFI_SSID 0
 #define EEPROM_ADR_WIFI_PWD 33
